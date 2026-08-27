@@ -36,7 +36,7 @@
   /**
    * @param {'done'|'attention'} kind
    * @param {number} volume 0..1
-   * @param {'claude'|'chatgpt'|'gemini'} provider — sonido distinto por IA
+   * @param {'claude'|'chatgpt'} provider — sonido distinto por IA
    */
   async function play(kind, volume, provider) {
     try {

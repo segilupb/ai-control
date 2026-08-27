@@ -3,7 +3,7 @@
     "message": "AI Control"
   },
   "extDesc": {
-    "message": "Monitor local para Claude, ChatGPT e Gemini: avisa quando um deles termina uma tarefa ou precisa da sua atenção, com som diferente por IA."
+    "message": "Monitor local para Claude e ChatGPT: avisa quando um deles termina uma tarefa ou precisa da sua atenção, com som diferente por IA."
   },
   "notifDone": {
     "message": "Claude terminou"
@@ -90,7 +90,7 @@
     "message": "Nenhuma aba de IA aberta"
   },
   "noTabsHint": {
-    "message": "Abra Claude, ChatGPT ou Gemini e este painel os detecta sozinho."
+    "message": "Abra Claude ou ChatGPT e este painel os detecta sozinho."
   },
   "toggleNotifications": {
     "message": "Notificações"
@@ -199,7 +199,7 @@
     "message": "Salvo ✓"
   },
   "optSubtitle": {
-    "message": "Monitorando Claude, ChatGPT e Gemini · tudo é salvo na hora e fica no seu navegador"
+    "message": "Monitorando Claude e ChatGPT · tudo é salvo na hora e fica no seu navegador"
   },
   "optNotifyDone": {
     "message": "Tarefa concluída"
@@ -304,13 +304,13 @@
     "message": "precisa da sua atenção"
   },
   "usageOnlyClaude": {
-    "message": "Só o Claude publica dados de uso — ChatGPT e Gemini não expõem limites."
+    "message": "Só o Claude publica dados de uso completos. O ChatGPT expõe apenas sua cota Work/Codex."
   },
   "optProviders": {
     "message": "Serviços de IA"
   },
   "optProvidersHint": {
-    "message": "Desative as que você não usa: suas abas deixam de ser monitoradas e o bloco de uso some do popup. Cada IA tem seu próprio som."
+    "message": "Desative a que você não usa: suas abas deixam de ser monitoradas e o bloco de uso some. Cada IA tem seu próprio som."
   },
   "testSound": {
     "message": "Testar som"
@@ -422,35 +422,5 @@
   },
   "meterCurrent": {
     "message": "Atual"
-  },
-  "optGeminiAccount": {
-    "message": "Conta do Gemini"
-  },
-  "optGeminiAccountHint": {
-    "message": "O Google separa contas por índice na URL: /u/0/ é a padrão, /u/1/ a segunda, etc. Digite o número que você usa no Gemini, ou deixe vazio para auto."
-  },
-  "optAccountIndex": {
-    "message": "Índice da conta"
-  },
-  "optDetect": {
-    "message": "Detectar"
-  },
-  "accountAuto": {
-    "message": "detectada das suas abas do Gemini abertas"
-  },
-  "probing": {
-    "message": "testando…"
-  },
-  "windowsFound": {
-    "message": "janelas encontradas"
-  },
-  "noUsagePage": {
-    "message": "página de uso não encontrada"
-  },
-  "autoWord": {
-    "message": "auto"
-  },
-  "probeTail": {
-    "message": "Se o índice da sua conta for maior, digite-o manualmente."
   }
 }

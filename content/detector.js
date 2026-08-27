@@ -3,8 +3,7 @@
  * ÚNICO archivo que conoce el DOM de los sitios. Si una IA cambia su interfaz,
  * se edita SU bloque en PROVIDERS y nada más.
  *
- * Proveedores: claude (claude.ai), chatgpt (chatgpt.com / chat.openai.com),
- *              gemini (gemini.google.com).
+ * Proveedores: claude (claude.ai), chatgpt (chatgpt.com / chat.openai.com).
  *
  * Contrato de detect() (idéntico para los tres: la FSM no cambia):
  * { provider, providerName, activity{...}, attention{...}, context{...},
@@ -62,29 +61,6 @@
       ],
     },
 
-    gemini: {
-      id: 'gemini', name: 'Gemini', hosts: ['gemini.google.com'],
-      titleSuffix: /\s*[-–|]\s*Gemini\s*$/i,
-      mainContainer: ['main', '[role="main"]', 'chat-window'],
-      streaming: [
-        'model-response[data-response-state="generating"]',
-        '.response-container.streaming',
-        '[data-test-id="streaming-indicator"]',
-      ],
-      stopButtonAttr: [
-        'button[aria-label*="stop" i]',
-        'button[data-test-id="stop-button"]',
-        'button[mattooltip*="stop" i]',
-      ],
-      toolRunning: ['[aria-busy="true"]', '[role="progressbar"]', 'mat-progress-bar', '.loading-indicator'],
-      toolTextScope: 'model-response, [data-test-id], message-content',
-      dialogs: ['[role="dialog"]', '[role="alertdialog"]', 'mat-dialog-container'],
-      errors: ['[role="alert"]', '.error-container'],
-      authWall: ['input[type="password"]'],
-      composer: ['rich-textarea div[contenteditable="true"]', 'div[contenteditable="true"]', 'textarea'],
-      lastMessage: ['model-response:last-of-type', '.conversation-container:last-of-type'],
-      modeProbes: ['[data-test-id="bard-mode-menu-button"]', 'button[aria-label*="model" i]'],
-    },
   };
 
   const STOP_WORDS = [

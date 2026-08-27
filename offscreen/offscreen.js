@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const PROVIDERS = ['claude', 'chatgpt', 'gemini'];
+const PROVIDERS = ['claude', 'chatgpt'];
 
 function fileFor(provider, kind) {
   const p = PROVIDERS.includes(provider) ? provider : 'claude';
@@ -17,7 +17,6 @@ function fileFor(provider, kind) {
 const TONES = {
   claude:  { done: [523.25, 659.25, 783.99, 1046.5], attention: [880, 660, 880] },
   chatgpt: { done: [587.33, 880.0],                  attention: [740, 587.33, 740] },
-  gemini:  { done: [987.77, 783.99, 587.33],         attention: [622.25, 830.61, 622.25] },
 };
 
 let current = null;

@@ -58,3 +58,37 @@ y solo en sub-frames. Ninguna otra web se ve afectada.
 pestaña de Gemini abierta (la de la cuenta correcta). El iframe hereda esa
 cuenta automáticamente, así que con varias cuentas de Google no hay que
 configurar nada más.
+
+## Buen comportamiento con los proveedores (rate limiting)
+Consultar endpoints privados obliga a ser prudente. AI Control:
+
+- Refresca el uso **cada 15 minutos**, no más.
+- Ante un **429** o ante la página de «tráfico inusual» de Google, entra en
+  **enfriamiento de 45 minutos**: deja de preguntar por completo en vez de
+  insistir, que es lo que agrava un bloqueo.
+- La búsqueda de cuenta de Gemini prueba primero el **iframe** de una pestaña
+  abierta (cero tráfico extra) y solo si falla recorre índices, con **2 s de
+  pausa** entre intentos y un máximo de 6.
+- Nunca reintenta en bucle: cada fuente hace como mucho un reintento por ciclo.
+
+### Si Google muestra «tráfico inusual»
+Casi siempre es una **VPN**: muchos usuarios comparten la misma IP de salida y
+Google la marca. Se reconoce porque el aviso muestra dos direcciones distintas
+que no coinciden entre sí. Soluciones, por orden: desactivar la VPN unos
+minutos, cambiar de servidor, o excluir `google.com` del túnel. La extensión
+detecta ese aviso y se calla durante 45 minutos por su cuenta.
+
+### Cuánto se consulta cada fuente (v3.5)
+| Fuente | En segundo plano | Al abrir el popup | Suelo mínimo |
+|---|---|---|---|
+| Claude (JSON ligero) | cada 15 min + al terminar una tarea | si el dato tiene >5 min | — |
+| ChatGPT (JSON) | ❌ nunca | si el dato no está fresco | 10 min |
+| **Gemini (página completa)** | ❌ **nunca** | si el dato no está fresco | **30 min** |
+
+Gemini se lee cargando su página en un iframe, que es una operación cara y muy
+visible para Google. Por eso quedó **fuera del refresco periódico y del refresco
+al terminar una tarea**: solo se lee al abrir el popup, como mucho cada 30
+minutos, o cuando pulsas ↻ (acción explícita, salta el suelo).
+
+Si aun así aparece un aviso de «tráfico inusual» de Google, desactiva Gemini en
+Opciones → Servicios de IA: eso corta todas las peticiones a Google de raíz.

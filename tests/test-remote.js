@@ -43,7 +43,7 @@ async function test(name, fn) {
 
   await test('done: mensaje GENÉRICO por defecto — el título de la conversación NO viaja', async () => {
     const { r, calls } = makeEnv({ enabled: true, topic: TOPIC });
-    const res = await r.send('done', 'Private project notes');
+    const res = await r.send('done', 'Migración Project Alpha con datos privados');
     assert.strictEqual(res.sent, true);
     assert.strictEqual(calls.length, 1);
     assert.strictEqual(calls[0].url, `https://ntfy.sh/${TOPIC}`);
@@ -121,9 +121,9 @@ async function test(name, fn) {
       t: (k) => ({ finishedWord: 'terminó', needsAttentionWord: 'necesita tu atención' })[k] || null,
     });
     await localized.send('done', null, 'Claude');
-    await localized.send('attention', null, 'Gemini');
+    await localized.send('attention', null, 'ChatGPT');
     assert.strictEqual(acc[0].init.headers.Title, 'Claude termino');
-    assert.strictEqual(acc[1].init.headers.Title, 'Gemini necesita tu atencion');
+    assert.strictEqual(acc[1].init.headers.Title, 'ChatGPT necesita tu atencion');
 
     for (const c of [...calls, ...acc]) {
       for (const [k, v] of Object.entries(c.init.headers)) {
@@ -147,11 +147,11 @@ async function test(name, fn) {
   await test('El aviso al teléfono identifica la IA (título y tags)', async () => {
     const { r, calls } = makeEnv({ enabled: true, topic: TOPIC });
     await r.send('done', null, 'ChatGPT');
-    await r.send('attention', null, 'Gemini');
+    await r.send('attention', null, 'ChatGPT');
     assert.strictEqual(calls[0].init.headers.Title, 'ChatGPT finished');
     assert.ok(calls[0].init.headers.Tags.startsWith('chatgpt,'), `tags: ${calls[0].init.headers.Tags}`);
-    assert.strictEqual(calls[1].init.headers.Title, 'Gemini needs your attention');
-    assert.ok(calls[1].init.headers.Tags.startsWith('gemini,'));
+    assert.strictEqual(calls[1].init.headers.Title, 'ChatGPT needs your attention');
+    assert.ok(calls[1].init.headers.Tags.startsWith('chatgpt,'));
   });
 
   await test('generateTopic: prefijo, longitud y unicidad razonable', async () => {

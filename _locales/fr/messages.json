@@ -3,7 +3,7 @@
     "message": "AI Control"
   },
   "extDesc": {
-    "message": "Moniteur local pour Claude, ChatGPT et Gemini : vous prévient quand l'un termine une tâche ou requiert votre attention, avec un son différent par IA."
+    "message": "Moniteur local pour Claude et ChatGPT : vous prévient quand l'un termine une tâche ou requiert votre attention, avec un son différent par IA."
   },
   "notifDone": {
     "message": "Claude a terminé"
@@ -90,7 +90,7 @@
     "message": "Aucun onglet d'IA ouvert"
   },
   "noTabsHint": {
-    "message": "Ouvrez Claude, ChatGPT ou Gemini et ce panneau les détecte tout seul."
+    "message": "Ouvrez Claude ou ChatGPT et ce panneau les détecte tout seul."
   },
   "toggleNotifications": {
     "message": "Notifications"
@@ -199,7 +199,7 @@
     "message": "Enregistré ✓"
   },
   "optSubtitle": {
-    "message": "Surveille Claude, ChatGPT et Gemini · tout est enregistré instantanément et reste dans votre navigateur"
+    "message": "Surveille Claude et ChatGPT · tout est enregistré instantanément et reste dans votre navigateur"
   },
   "optNotifyDone": {
     "message": "Tâche terminée"
@@ -304,13 +304,13 @@
     "message": "requiert votre attention"
   },
   "usageOnlyClaude": {
-    "message": "Seul Claude publie des données d'usage — ChatGPT et Gemini n'exposent pas leurs limites."
+    "message": "Seul Claude publie des données d'usage complètes. ChatGPT n'expose que son quota Work/Codex."
   },
   "optProviders": {
     "message": "Services d'IA"
   },
   "optProvidersHint": {
-    "message": "Désactivez celles que vous n'utilisez pas : leurs onglets ne sont plus surveillés et leur bloc d'usage disparaît. Chaque IA a son propre son."
+    "message": "Désactivez celle que vous n'utilisez pas : ses onglets ne sont plus surveillés et son bloc d'usage disparaît. Chaque IA a son propre son."
   },
   "testSound": {
     "message": "Tester le son"
@@ -422,35 +422,5 @@
   },
   "meterCurrent": {
     "message": "Actuel"
-  },
-  "optGeminiAccount": {
-    "message": "Compte Gemini"
-  },
-  "optGeminiAccountHint": {
-    "message": "Google sépare les comptes par index d'URL : /u/0/ par défaut, /u/1/ le second, etc. Saisissez le numéro que vous utilisez, ou laissez vide pour auto."
-  },
-  "optAccountIndex": {
-    "message": "Index du compte"
-  },
-  "optDetect": {
-    "message": "Détecter"
-  },
-  "accountAuto": {
-    "message": "détecté depuis vos onglets Gemini ouverts"
-  },
-  "probing": {
-    "message": "test en cours…"
-  },
-  "windowsFound": {
-    "message": "fenêtres trouvées"
-  },
-  "noUsagePage": {
-    "message": "page d'usage introuvable"
-  },
-  "autoWord": {
-    "message": "auto"
-  },
-  "probeTail": {
-    "message": "Si votre index de compte est plus élevé, saisissez-le manuellement."
   }
 }

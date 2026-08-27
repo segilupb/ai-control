@@ -1,6 +1,6 @@
 /*
  * AI Control — background/usage-multi.js
- * Obtención de uso para ChatGPT (wham) y Gemini (/usage), normalizada por
+ * Obtención de uso para ChatGPT (Work/Codex vía wham), normalizada por
  * usage-adapters.js. Claude sigue en background/usage.js (ya existente).
  *
  * Principios heredados de la auditoría:
@@ -8,10 +8,6 @@
  *    /api/auth/session, reintento único ante 401/403, y NUNCA persistir el
  *    token en disco: vive en memoria del service worker (se pierde al dormir,
  *    se vuelve a pedir; es barato y no deja credenciales guardadas).
- *  · gemini-usage-bar → fetch de /usage + parseo del HTML. El fallback iframe
- *    de ese repo no se replica: requiere declarativeNetRequest para quitar
- *    CSP y aquí no compensa. Si el fetch falla, se degrada a 'unavailable'.
- *
  * Cada fuente conserva su último dato bueno (last-known-good) y lo marca
  * `stale` en vez de dejar el panel vacío.
  */
@@ -28,18 +24,6 @@
     'https://chatgpt.com/api/auth/session',
     'https://chatgpt.com/backend-api/auth/session',
   ];
-  const GEMINI_BASE = 'https://gemini.google.com';
-  /**
-   * Google separa las cuentas por índice en la URL: /u/0/ es la cuenta por
-   * defecto, /u/1/ la segunda, etc. Sin el índice correcto se consulta SIEMPRE
-   * la cuenta por defecto, que puede no ser la que usas para Gemini.
-   */
-  function geminiUsageUrl(accountIndex) {
-    const i = Number(accountIndex);
-    return Number.isInteger(i) && i > 0
-      ? `${GEMINI_BASE}/u/${i}/usage`
-      : `${GEMINI_BASE}/usage`;
-  }
 
   function createUsageMulti(deps) {
     const d = Object.assign({
@@ -50,7 +34,6 @@
       storageGet: async () => ({}),
       storageSet: async () => {},
       uiLanguage: () => 'en-US',
-      getGeminiAccountIndex: async () => 0,
     }, deps || {});
 
     const A = d.adapters;
@@ -85,8 +68,15 @@
       return h;
     }
 
-    async function fetchChatGPT() {
+    async function fetchChatGPT(opts = {}) {
       const now = d.now();
+      if (await inCooldown('chatgpt', now)) {
+        return fallback('chatgpt', 'wham', 'error', now, 'cooldown');
+      }
+      if (!opts.force && await tooSoon('chatgpt', now)) {
+        return fallback('chatgpt', 'wham', 'ok', now, 'throttled');
+      }
+      await markFetched('chatgpt', now);
       try {
         let token = memToken;
         let res = await http(WHAM_URL, { credentials: 'include', headers: whamHeaders(token) });
@@ -101,6 +91,7 @@
         }
 
         if (!res.ok) {
+          if (res.status === 429) await setCooldown('chatgpt', now);
           return fallback('chatgpt', 'wham', A.statusFromHttp(res.status), now, res.status);
         }
         const snap = A.fromChatGPTWham(await res.json(), { now });
@@ -112,37 +103,31 @@
       }
     }
 
-    /* ── Gemini ────────────────────────────────────────────────────── */
-    async function fetchGemini(opts = {}) {
-      const now = d.now();
-      // 'auto' → índice detectado de las pestañas abiertas de Gemini
-      const idx = opts.accountIndex !== undefined
-        ? opts.accountIndex
-        : await d.getGeminiAccountIndex();
-      try {
-        const res = await http(`${geminiUsageUrl(idx)}?t=${now}`, {
-          credentials: 'include',
-          headers: { accept: 'text/html' },
-        });
-        if (!res.ok) {
-          return fallback('gemini', 'usage-page', A.statusFromHttp(res.status), now, res.status);
-        }
-        const html = await res.text();
-        // Redirección silenciosa a login: el HTML no trae la página de uso.
-        if (/accounts\.google\.com|<title>[^<]*sign in/i.test(html.slice(0, 4000))) {
-          return fallback('gemini', 'usage-page', 'auth', now, 'redirect-login');
-        }
-        const doc = d.parseHTML ? d.parseHTML(html) : null;
-        const snap = A.parseGeminiDocument(doc, { now });
-        if (snap.status === 'ok') {
-          snap.extras = { ...(snap.extras || {}), accountIndex: idx || 0 };
-          await remember('gemini', snap);
-        }
-        else return fallback('gemini', 'usage-page', snap.status, now, snap.error);
-        return snap;
-      } catch (_e) {
-        return fallback('gemini', 'usage-page', 'error', now, 'network');
-      }
+    /* ── Suelo de frecuencia: jamás consultar más seguido que esto ─── */
+    const MIN_INTERVAL_MS = { chatgpt: 10 * 60 * 1000 };
+    const lastKey = (p) => `cc_usage_lastfetch_${p}`;
+
+    async function tooSoon(provider, now) {
+      const st = await d.storageGet([lastKey(provider)]);
+      const last = st && st[lastKey(provider)];
+      const floor = MIN_INTERVAL_MS[provider] || 10 * 60 * 1000;
+      return typeof last === 'number' && (now - last) < floor;
+    }
+    async function markFetched(provider, now) {
+      await d.storageSet({ [lastKey(provider)]: now });
+    }
+
+    /* ── Enfriamiento tras un bloqueo (429 / límite del proveedor) ─── */
+    const COOLDOWN_MS = 45 * 60 * 1000;   // 45 min sin volver a preguntar
+    const cdKey = (p) => `cc_usage_cooldown_${p}`;
+
+    async function setCooldown(provider, now) {
+      await d.storageSet({ [cdKey(provider)]: now + COOLDOWN_MS });
+    }
+    async function inCooldown(provider, now) {
+      const st = await d.storageGet([cdKey(provider)]);
+      const until = st && st[cdKey(provider)];
+      return typeof until === 'number' && now < until;
     }
 
     /* ── Last-known-good ───────────────────────────────────────────── */
@@ -168,7 +153,11 @@
       return last ? A.markStale(last, d.now()) : null;
     }
 
-    return { fetchChatGPT, fetchGemini, cached, geminiUsageUrl, WHAM_URL, GEMINI_BASE };
+    return {
+      fetchChatGPT, cached,
+      setCooldown, inCooldown, tooSoon, COOLDOWN_MS, MIN_INTERVAL_MS,
+      WHAM_URL,
+    };
   }
 
   return { createUsageMulti };

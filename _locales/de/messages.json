@@ -3,7 +3,7 @@
     "message": "AI Control"
   },
   "extDesc": {
-    "message": "Lokaler Monitor für Claude, ChatGPT und Gemini: benachrichtigt dich, wenn eine Aufgabe fertig ist oder Aufmerksamkeit braucht — mit eigenem Ton pro KI."
+    "message": "Lokaler Monitor für Claude und ChatGPT: benachrichtigt dich, wenn eine Aufgabe fertig ist oder Aufmerksamkeit braucht — mit eigenem Ton pro KI."
   },
   "notifDone": {
     "message": "Claude ist fertig"
@@ -90,7 +90,7 @@
     "message": "Keine KI-Tabs geöffnet"
   },
   "noTabsHint": {
-    "message": "Öffne Claude, ChatGPT oder Gemini — dieses Panel erkennt sie automatisch."
+    "message": "Öffne Claude oder ChatGPT — dieses Panel erkennt sie automatisch."
   },
   "toggleNotifications": {
     "message": "Benachrichtigungen"
@@ -199,7 +199,7 @@
     "message": "Gespeichert ✓"
   },
   "optSubtitle": {
-    "message": "Überwacht Claude, ChatGPT und Gemini · alles wird sofort gespeichert und bleibt im Browser"
+    "message": "Überwacht Claude und ChatGPT · alles wird sofort gespeichert und bleibt im Browser"
   },
   "optNotifyDone": {
     "message": "Aufgabe beendet"
@@ -304,7 +304,7 @@
     "message": "braucht deine Aufmerksamkeit"
   },
   "usageOnlyClaude": {
-    "message": "Nur Claude veröffentlicht Nutzungsdaten — ChatGPT und Gemini legen keine Limits offen."
+    "message": "Nur Claude veröffentlicht vollständige Nutzungsdaten. ChatGPT zeigt nur sein Work/Codex-Kontingent."
   },
   "optProviders": {
     "message": "KI-Dienste"
@@ -422,35 +422,5 @@
   },
   "meterCurrent": {
     "message": "Aktuell"
-  },
-  "optGeminiAccount": {
-    "message": "Gemini-Konto"
-  },
-  "optGeminiAccountHint": {
-    "message": "Google trennt Konten per URL-Index: /u/0/ ist Standard, /u/1/ das zweite usw. Gib die Nummer ein, die du für Gemini nutzt, oder lass es leer für auto."
-  },
-  "optAccountIndex": {
-    "message": "Konto-Index"
-  },
-  "optDetect": {
-    "message": "Erkennen"
-  },
-  "accountAuto": {
-    "message": "aus deinen offenen Gemini-Tabs erkannt"
-  },
-  "probing": {
-    "message": "wird geprüft…"
-  },
-  "windowsFound": {
-    "message": "Fenster gefunden"
-  },
-  "noUsagePage": {
-    "message": "keine Nutzungsseite gefunden"
-  },
-  "autoWord": {
-    "message": "auto"
-  },
-  "probeTail": {
-    "message": "Wenn dein Konto-Index höher ist, gib ihn manuell ein."
   }
 }

@@ -53,8 +53,6 @@ test('Los patrones de red identifican al proveedor correcto', () => {
   assert.strictEqual(net.providerForUrl('https://chatgpt.com/backend-api/f/conversation'), 'chatgpt');
   assert.strictEqual(net.providerForUrl('https://chat.openai.com/backend-api/conversation'), 'chatgpt');
   assert.strictEqual(net.providerForUrl(
-    'https://gemini.google.com/_/BardChatUi/data/assistant.lamda.BardFrontendService/StreamGenerate?bl=x'), 'gemini');
-  assert.strictEqual(net.providerForUrl(
     'https://claude.ai/api/organizations/abc-123/chat_conversations/def/completion'), 'claude');
   assert.strictEqual(net.providerForUrl('https://claude.ai/api/organizations'), null);
   assert.strictEqual(net.providerForUrl('https://example.com/foo'), null);

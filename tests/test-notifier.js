@@ -162,21 +162,21 @@ async function test(name, fn) {
     tick(6000);
     await n.notifyCompleted({ tabId: 2, conversationTitle: 'B', provider: 'chatgpt', providerName: 'ChatGPT' });
     tick(6000);
-    await n.notifyCompleted({ tabId: 3, conversationTitle: 'C', provider: 'gemini', providerName: 'Gemini' });
-    assert.deepStrictEqual(sounds, [['done','claude'], ['done','chatgpt'], ['done','gemini']]);
+    await n.notifyCompleted({ tabId: 3, conversationTitle: 'C', provider: 'claude', providerName: 'Claude' });
+    assert.deepStrictEqual(sounds, [['done','claude'], ['done','chatgpt'], ['done','claude']]);
     assert.strictEqual(created[0][1].title, 'Claude finished');
     assert.strictEqual(created[1][1].title, 'ChatGPT finished');
-    assert.strictEqual(created[2][1].title, 'Gemini finished');
+    assert.strictEqual(created[2][1].title, 'Claude finished');
   });
 
   await test('Grupo mixto: la notificación agrupada identifica cada IA', async () => {
     const { n, created, tick } = makeEnv();
     await n.notifyCompleted({ tabId: 1, conversationTitle: 'Audit', provider: 'claude', providerName: 'Claude' });
     tick(1500);
-    await n.notifyCompleted({ tabId: 2, conversationTitle: 'Draft', provider: 'gemini', providerName: 'Gemini' });
+    await n.notifyCompleted({ tabId: 2, conversationTitle: 'Draft', provider: 'chatgpt', providerName: 'ChatGPT' });
     const group = created.filter(([id]) => id.startsWith('cc|group|')).pop();
     assert.ok(group[1].message.includes('Claude: Audit'));
-    assert.ok(group[1].message.includes('Gemini: Draft'));
+    assert.ok(group[1].message.includes('ChatGPT: Draft'));
   });
 
   // ── Badge ───────────────────────────────────────────────────────────

@@ -119,25 +119,24 @@ test('El detector cubre el botón Stop en varios idiomas', () => {
 
 test('El detector soporta los tres proveedores con sus hosts', () => {
   const det = require(path.join(ROOT, 'content/detector.js'));
-  assert.deepStrictEqual(Object.keys(det.PROVIDERS).sort(), ['chatgpt', 'claude', 'gemini']);
+  assert.deepStrictEqual(Object.keys(det.PROVIDERS).sort(), ['chatgpt', 'claude']);
   assert.strictEqual(det.providerFor('claude.ai').id, 'claude');
   assert.strictEqual(det.providerFor('chatgpt.com').id, 'chatgpt');
   assert.strictEqual(det.providerFor('chat.openai.com').id, 'chatgpt');
-  assert.strictEqual(det.providerFor('gemini.google.com').id, 'gemini');
   assert.strictEqual(det.providerFor('example.com'), null);
 });
 
-test('El manifest inyecta el content script en los tres sitios', () => {
+test('El manifest inyecta el content script en los sitios soportados', () => {
   const m = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));
   const matches = m.content_scripts[0].matches.join(' ');
-  for (const host of ['claude.ai', 'chatgpt.com', 'chat.openai.com', 'gemini.google.com']) {
+  for (const host of ['claude.ai', 'chatgpt.com', 'chat.openai.com']) {
     assert.ok(matches.includes(host), `falta ${host} en content_scripts`);
     assert.ok(m.host_permissions.some((h) => h.includes(host)), `falta ${host} en host_permissions`);
   }
 });
 
 test('Existe un sonido distinto por proveedor y tipo', () => {
-  for (const p of ['claude', 'chatgpt', 'gemini']) {
+  for (const p of ['claude', 'chatgpt']) {
     for (const k of ['done', 'attention']) {
       const f = path.join(ROOT, 'sounds', `${p}-${k}.wav`);
       assert.ok(fs.existsSync(f), `falta ${p}-${k}.wav`);
@@ -146,11 +145,11 @@ test('Existe un sonido distinto por proveedor y tipo', () => {
   }
   // y deben ser realmente distintos entre sí
   const hashes = new Set();
-  for (const p of ['claude', 'chatgpt', 'gemini']) {
+  for (const p of ['claude', 'chatgpt']) {
     const buf = fs.readFileSync(path.join(ROOT, 'sounds', `${p}-done.wav`));
     hashes.add(require('crypto').createHash('sha1').update(buf).digest('hex'));
   }
-  assert.strictEqual(hashes.size, 3, 'los sonidos de done deben ser distintos entre proveedores');
+  assert.strictEqual(hashes.size, 2, 'los sonidos de done deben ser distintos entre proveedores');
 });
 
 console.log(`\n${passed} pasados, ${failed} fallidos`);

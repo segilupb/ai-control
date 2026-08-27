@@ -4,7 +4,6 @@
  *
  * Patrones tomados de aicq (LLM_ENDPOINTS) y verificables en vivo:
  *   ChatGPT → /backend-api/f/conversation  y  /backend-api/conversation
- *   Gemini  → .../BardFrontendService/StreamGenerate*
  *   Claude  → /api/organizations/*./chat_conversations/*./completion
  *
  * Diferencia clave con aicq: allí `onCompleted` dispara la notificación
@@ -29,10 +28,6 @@
       'https://chatgpt.com/backend-api/conversation*',
       'https://chat.openai.com/backend-api/conversation*',
     ],
-    gemini: [
-      'https://gemini.google.com/_/BardChatUi/data/assistant.lamda.BardFrontendService/StreamGenerate*',
-      'https://gemini.google.com/_/BardChatUi/data/assistant.lamda.BardFrontendService/*',
-    ],
     claude: [
       'https://claude.ai/api/organizations/*/chat_conversations/*/completion*',
       'https://claude.ai/api/organizations/*/completion*',
@@ -44,7 +39,6 @@
   function providerForUrl(url) {
     if (typeof url !== 'string') return null;
     if (/^https:\/\/(chatgpt\.com|chat\.openai\.com)\/backend-api\/(f\/)?conversation/.test(url)) return 'chatgpt';
-    if (/BardFrontendService\/StreamGenerate/.test(url)) return 'gemini';
     if (/^https:\/\/claude\.ai\/api\/organizations\/[^/]+\/(chat_conversations\/[^/]+\/)?completion/.test(url)) return 'claude';
     return null;
   }

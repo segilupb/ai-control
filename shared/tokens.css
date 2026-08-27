@@ -24,12 +24,10 @@
   /* ── Proveedores (cercanos a la identidad oficial) ── */
   --provider-claude:  #D97757;  /* terracota de Anthropic */
   --provider-chatgpt: #10A37F;  /* teal-verde de OpenAI */
-  --provider-gemini:  #4285F4;  /* azul de Google */
 
   /* Fondos tenues para los pills (12% del color sobre negro) */
   --provider-claude-bg:  color-mix(in srgb, var(--provider-claude) 16%, transparent);
   --provider-chatgpt-bg: color-mix(in srgb, var(--provider-chatgpt) 16%, transparent);
-  --provider-gemini-bg:  color-mix(in srgb, var(--provider-gemini) 16%, transparent);
 
   /* ── Estados (deliberadamente lejos de los colores de marca) ── */
   --state-success: #4ADE80;  /* verde CLARO: distinto del teal de ChatGPT */
@@ -59,12 +57,10 @@
 }
 .pill.claude  { color: var(--provider-claude);  background: var(--provider-claude-bg); }
 .pill.chatgpt { color: var(--provider-chatgpt); background: var(--provider-chatgpt-bg); }
-.pill.gemini  { color: var(--provider-gemini);  background: var(--provider-gemini-bg); }
 
 .swatch { width: 9px; height: 9px; border-radius: 3px; display: inline-block; }
 .swatch.claude  { background: var(--provider-claude); }
 .swatch.chatgpt { background: var(--provider-chatgpt); }
-.swatch.gemini  { background: var(--provider-gemini); }
 
 .eyebrow {
   font-size: 10px; font-weight: 700; letter-spacing: .15em;

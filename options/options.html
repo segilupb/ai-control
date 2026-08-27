@@ -19,7 +19,6 @@
   <div class="hdr-providers">
     <span class="pill claude">Claude</span>
     <span class="pill chatgpt">ChatGPT</span>
-    <span class="pill gemini">Gemini</span>
   </div>
 
   <!-- ── Notificaciones ── -->
@@ -53,29 +52,6 @@
       <span class="prov"><span class="pill chatgpt">ChatGPT</span><small class="mono">chatgpt.com · chat.openai.com</small></span>
       <button class="btn sm" data-sound="chatgpt" data-i18n="testSound">Test sound</button>
     </label>
-    <label class="row">
-      <input type="checkbox" id="pGemini">
-      <span class="prov"><span class="pill gemini">Gemini</span><small class="mono">gemini.google.com</small></span>
-      <button class="btn sm" data-sound="gemini" data-i18n="testSound">Test sound</button>
-    </label>
-  </section>
-
-  <!-- ── Cuenta de Gemini ── -->
-  <section class="card">
-    <h2 data-i18n="optGeminiAccount">Gemini account</h2>
-    <p class="hint-block" style="border:0;padding-top:0;margin-top:-4px" data-i18n="optGeminiAccountHint">Google separates accounts by URL index: /u/0/ is the default, /u/1/ the second, and so on. Pick the one you use for Gemini. Type the number, or leave it empty for auto.</p>
-    <label class="row slider-row">
-      <span><b data-i18n="optAccountIndex">Account index</b><small class="hint mono" id="geminiAccountHint"></small></span>
-      <span style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="geminiAccountIndex" class="txt mono" style="width:110px"
-               inputmode="numeric" spellcheck="false" placeholder="auto"
-               data-i18n-placeholder="autoWord">
-        <button class="btn" id="geminiProbe" data-i18n="optDetect">Detect</button>
-      </span>
-    </label>
-    <div class="row" style="cursor:default;padding-top:0">
-      <span></span><small id="geminiProbeResult" class="mono" style="font-size:11px;color:var(--text-3)"></small>
-    </div>
   </section>
 
   <!-- ── Sonido ── -->

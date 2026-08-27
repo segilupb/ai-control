@@ -26,7 +26,7 @@ const DEFAULT_SETTINGS = {
   minTaskMs: 1500,
   usage: { thresholdsEnabled: true, thresholds: { session: 80, weekly: 80 } },
   historyEnabled: true,
-  providers: { claude: true, chatgpt: true, gemini: true },
+  providers: { claude: true, chatgpt: true },
   remote: { enabled: false, server: 'https://ntfy.sh', topic: '', includeTitle: false, onDone: true, onAttention: true },
 };
 let settingsCache = { ...DEFAULT_SETTINGS };
@@ -110,7 +110,7 @@ const usage = createUsageMonitor({
 });
 
 const USAGE_ALARM = 'cc_usage_refresh';
-const USAGE_PERIOD_MIN = 10;
+const USAGE_PERIOD_MIN = 15;   // menos frecuencia = menos ruido para el proveedor
 
 // ── Historial ligero (sin contenido de conversaciones) ────────────────
 const history = createHistory({
@@ -120,25 +120,14 @@ const history = createHistory({
   isEnabled: async () => (await loadSettings()).historyEnabled !== false,
 });
 
-// ── Uso multi-proveedor (ChatGPT wham + Gemini /usage) ────────────────
+// ── Uso de ChatGPT (Work/Codex vía wham) ──────────────────────────────
 const usageMulti = createUsageMulti({
   now: () => Date.now(),
   fetchFn: (url, init) => fetch(url, init),
   adapters: usageAdapters,
-  // El service worker no tiene DOMParser; se usa el parser HTML nativo de
-  // Response → Document vía un truco compatible con MV3.
-  parseHTML: (html) => {
-    try {
-      // eslint-disable-next-line no-undef
-      return new DOMParser().parseFromString(html, 'text/html');
-    } catch (_e) {
-      return null;   // sin parser → el adaptador devuelve 'error' limpio
-    }
-  },
   storageGet: (keys) => chrome.storage.local.get(keys),
   storageSet: (obj) => chrome.storage.local.set(obj),
   uiLanguage: () => { try { return chrome.i18n.getUILanguage() || 'en-US'; } catch (_e) { return 'en-US'; } },
-  getGeminiAccountIndex: () => resolveGeminiAccount(),
 });
 
 /**
@@ -152,62 +141,6 @@ async function isProviderEnabled(provider) {
   return p[provider] !== false;
 }
 
-/**
- * Lee el uso de Gemini desde una pestaña abierta usando un iframe same-origin.
- * Es la única vía cuando la página pinta los valores con JavaScript: el fetch
- * del HTML crudo no los contiene.
- */
-async function scrapeGeminiFromTab() {
-  try {
-    const tabs = await chrome.tabs.query({ url: 'https://gemini.google.com/*' });
-    for (const t of tabs) {
-      if (!t.id) continue;
-      try {
-        const snap = await chrome.tabs.sendMessage(t.id, { ns: 'cc', type: 'CC_GEMINI_SCRAPE' });
-        if (snap && snap.status === 'ok' && snap.windows && snap.windows.length) {
-          snap.source = 'usage-iframe';
-          await chrome.storage.local.set({ cc_usage_lkg_gemini: snap });
-          return snap;
-        }
-      } catch (_e) { /* pestaña sin content script todavía */ }
-    }
-  } catch (_e) { /* sin pestañas */ }
-  return null;
-}
-
-/**
- * Uso de Gemini: primero el fetch (barato); si no trae valores porque la
- * página los renderiza con JS, se recurre al iframe de una pestaña abierta.
- */
-async function fetchGeminiSmart() {
-  const viaFetch = await usageMulti.fetchGemini();
-  if (viaFetch && viaFetch.status === 'ok') return viaFetch;
-  const viaFrame = await scrapeGeminiFromTab();
-  return viaFrame || viaFetch;
-}
-
-/**
- * Índice de cuenta de Google para Gemini.
- *  · Si el usuario fijó uno en Opciones, manda ese.
- *  · Si está en 'auto', se deduce de las pestañas de Gemini abiertas
- *    (la URL trae /u/N/ cuando hay varias cuentas).
- */
-async function resolveGeminiAccount() {
-  const s = await loadSettings();
-  const manual = s.gemini && s.gemini.accountIndex;
-  if (manual !== 'auto' && manual !== undefined && manual !== null && manual !== '') {
-    const n = Number(manual);
-    if (Number.isInteger(n) && n >= 0) return n;   // sin límite superior
-  }
-  try {
-    const tabs = await chrome.tabs.query({ url: 'https://gemini.google.com/*' });
-    for (const t of tabs) {
-      const m = (t.url || '').match(/gemini\.google\.com\/u\/(\d+)\//);
-      if (m) return Number(m[1]);
-    }
-  } catch (_e) { /* sin permiso o sin pestañas */ }
-  return 0;
-}
 
 // ── Señales de red: EVIDENCIA para la FSM, nunca notificación directa ──
 const networkSignals = createNetworkSignals({
@@ -226,15 +159,19 @@ const remote = createRemote({
 });
 
 // ── Hooks: registry → notifier + badge ────────────────────────────────
-// Refresco de uso tras terminar (debounce): el dato cambia justo entonces.
+/**
+ * Refresco de uso tras terminar una tarea.
+ *
+ * SOLO Claude, y a propósito: su endpoint es un JSON ligero y barato.
+ * ChatGPT se deja fuera porque su cuota se mueve despacio y no compensa
+ * consultar su endpoint tras cada tarea.
+ */
 const usageRefreshTimers = {};
 function scheduleUsageRefresh(provider) {
-  if (!provider || usageRefreshTimers[provider]) return;
+  if (provider !== 'claude' || usageRefreshTimers[provider]) return;
   usageRefreshTimers[provider] = setTimeout(() => {
     usageRefreshTimers[provider] = null;
-    if (provider === 'gemini') fetchGeminiSmart().catch(() => {});
-    else if (provider === 'chatgpt') usageMulti.fetchChatGPT().catch(() => {});
-    else if (provider === 'claude') usage.refresh({ force: true }).catch(() => {});
+    usage.refresh({ force: true }).catch(() => {});
   }, 1500);
 }
 
@@ -336,9 +273,8 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         const enabled = {
           claude: await isProviderEnabled('claude'),
           chatgpt: await isProviderEnabled('chatgpt'),
-          gemini: await isProviderEnabled('gemini'),
         };
-        // Claude (fuente propia) + ChatGPT + Gemini, todos con el mismo contrato.
+        // Claude (fuente propia) + ChatGPT, ambos con el mismo contrato.
         const out = { enabled };
 
         if (enabled.claude) {
@@ -351,12 +287,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         if (enabled.chatgpt) {
           const snap = await usageMulti.cached('chatgpt');
           out.chatgpt = snap || { provider: 'chatgpt', source: 'wham', status: 'unavailable', windows: [] };
-          if (!snap || snap.status !== 'ok') usageMulti.fetchChatGPT().catch(() => {});
-        }
-        if (enabled.gemini) {
-          const snap = await usageMulti.cached('gemini');
-          out.gemini = snap || { provider: 'gemini', source: 'usage-page', status: 'unavailable', windows: [] };
-          if (!snap || snap.status !== 'ok') fetchGeminiSmart().catch(() => {});
+          if (!snap || snap.status !== 'ok') usageMulti.fetchChatGPT().catch(() => {});   // respeta el suelo
         }
         sendResponse(out);
         break;
@@ -364,8 +295,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       case 'CC_USAGE_REFRESH_ALL': {
         const res = { ok: true };
         if (await isProviderEnabled('claude')) res.claude = (await usage.refresh({ force: true })).ok;
-        if (await isProviderEnabled('chatgpt')) res.chatgpt = (await usageMulti.fetchChatGPT()).status;
-        if (await isProviderEnabled('gemini')) res.gemini = (await fetchGeminiSmart()).status;
+        if (await isProviderEnabled('chatgpt')) res.chatgpt = (await usageMulti.fetchChatGPT({ force: true })).status;
         sendResponse(res);
         break;
       }
@@ -481,10 +411,10 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
   // Auto-clear de notificaciones (nombres con prefijo del notifier).
   if (await notifier.handleAlarm(alarm.name)) return;
   if (alarm.name === USAGE_ALARM) {
-    // No consultar endpoints de IAs que el usuario no usa.
+    // Solo Claude en segundo plano: endpoint JSON ligero.
+    // ChatGPT se lee al abrir el popup (con suelo de frecuencia), para no
+    // machacar su servidor en segundo plano.
     isProviderEnabled('claude').then((on) => on && usage.refresh().catch(() => {}));
-    isProviderEnabled('chatgpt').then((on) => on && usageMulti.fetchChatGPT().catch(() => {}));
-    isProviderEnabled('gemini').then((on) => on && fetchGeminiSmart().catch(() => {}));
     return;
   }
   if (alarm.name !== 'cc_stale_sweep') return;
@@ -499,7 +429,7 @@ chrome.storage.onChanged.addListener(async (changes, area) => {
   try {
     const tabs = await chrome.tabs.query({ url: [
       'https://claude.ai/*', 'https://chatgpt.com/*',
-      'https://chat.openai.com/*', 'https://gemini.google.com/*',
+      'https://chat.openai.com/*',
     ] });
     for (const t of tabs) {
       chrome.tabs.sendMessage(t.id, {

@@ -3,7 +3,7 @@
     "message": "AI Control"
   },
   "extDesc": {
-    "message": "Local-first monitor for Claude, ChatGPT and Gemini: get notified when one finishes a task or needs your attention, with a different sound per AI."
+    "message": "Local-first monitor for Claude and ChatGPT: get notified when one finishes a task or needs your attention, with a different sound per AI."
   },
   "notifDone": {
     "message": "Claude finished"
@@ -90,7 +90,7 @@
     "message": "No AI tabs open"
   },
   "noTabsHint": {
-    "message": "Open Claude, ChatGPT or Gemini and this panel detects them automatically."
+    "message": "Open Claude or ChatGPT and this panel detects them automatically."
   },
   "toggleNotifications": {
     "message": "Notifications"
@@ -199,7 +199,7 @@
     "message": "Saved ✓"
   },
   "optSubtitle": {
-    "message": "Monitoring Claude, ChatGPT and Gemini · everything saves instantly and stays in your browser"
+    "message": "Monitoring Claude and ChatGPT · everything saves instantly and stays in your browser"
   },
   "optNotifyDone": {
     "message": "Task finished"
@@ -304,13 +304,13 @@
     "message": "needs your attention"
   },
   "usageOnlyClaude": {
-    "message": "Only Claude publishes usage data — ChatGPT and Gemini don't expose limits."
+    "message": "Only Claude publishes full usage data. ChatGPT exposes its Work/Codex quota only."
   },
   "optProviders": {
     "message": "AI services"
   },
   "optProvidersHint": {
-    "message": "Turn off the ones you don't use: their tabs stop being monitored and their usage block disappears from the popup. Each AI has its own alert sound."
+    "message": "Turn off the one you don't use: its tabs stop being monitored and its usage block disappears. Each AI has its own alert sound."
   },
   "testSound": {
     "message": "Test sound"
@@ -422,35 +422,5 @@
   },
   "meterCurrent": {
     "message": "Current"
-  },
-  "optGeminiAccount": {
-    "message": "Gemini account"
-  },
-  "optGeminiAccountHint": {
-    "message": "Google separates accounts by URL index: /u/0/ is the default, /u/1/ the second, and so on. Type the number you use for Gemini, or leave it empty for auto."
-  },
-  "optAccountIndex": {
-    "message": "Account index"
-  },
-  "optDetect": {
-    "message": "Detect"
-  },
-  "accountAuto": {
-    "message": "detected from your open Gemini tabs"
-  },
-  "probing": {
-    "message": "probing…"
-  },
-  "windowsFound": {
-    "message": "windows found"
-  },
-  "noUsagePage": {
-    "message": "no usage page found"
-  },
-  "autoWord": {
-    "message": "auto"
-  },
-  "probeTail": {
-    "message": "If your account index is higher, type it manually."
   }
 }

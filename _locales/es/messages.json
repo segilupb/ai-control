@@ -3,7 +3,7 @@
     "message": "AI Control"
   },
   "extDesc": {
-    "message": "Monitor local para Claude, ChatGPT y Gemini: te avisa cuando alguno termina una tarea o necesita tu atención, con un sonido distinto por IA."
+    "message": "Monitor local para Claude y ChatGPT: te avisa cuando alguno termina una tarea o necesita tu atención, con un sonido distinto por IA."
   },
   "notifDone": {
     "message": "Claude terminó"
@@ -90,7 +90,7 @@
     "message": "Sin pestañas de IA abiertas"
   },
   "noTabsHint": {
-    "message": "Abre Claude, ChatGPT o Gemini y este panel las detecta solo."
+    "message": "Abre Claude o ChatGPT y este panel las detecta solo."
   },
   "toggleNotifications": {
     "message": "Notificaciones"
@@ -199,7 +199,7 @@
     "message": "Guardado ✓"
   },
   "optSubtitle": {
-    "message": "Monitorizando Claude, ChatGPT y Gemini · todo se guarda al instante y queda en tu navegador"
+    "message": "Monitorizando Claude y ChatGPT · todo se guarda al instante y queda en tu navegador"
   },
   "optNotifyDone": {
     "message": "Tarea terminada"
@@ -304,13 +304,13 @@
     "message": "necesita tu atención"
   },
   "usageOnlyClaude": {
-    "message": "Solo Claude publica datos de uso — ChatGPT y Gemini no exponen sus límites."
+    "message": "Solo Claude publica datos de uso completos. ChatGPT expone únicamente su cuota Work/Codex."
   },
   "optProviders": {
     "message": "Servicios de IA"
   },
   "optProvidersHint": {
-    "message": "Desactiva las que no uses: sus pestañas dejan de monitorizarse y su bloque de uso desaparece del popup. Cada IA tiene su propio sonido."
+    "message": "Desactiva la que no uses: sus pestañas dejan de monitorizarse y su bloque de uso desaparece. Cada IA tiene su propio sonido."
   },
   "testSound": {
     "message": "Probar sonido"
@@ -422,35 +422,5 @@
   },
   "meterCurrent": {
     "message": "Actual"
-  },
-  "optGeminiAccount": {
-    "message": "Cuenta de Gemini"
-  },
-  "optGeminiAccountHint": {
-    "message": "Google separa las cuentas por índice en la URL: /u/0/ es la predeterminada, /u/1/ la segunda, etc. Escribe el número que usas para Gemini, o déjalo vacío para auto."
-  },
-  "optAccountIndex": {
-    "message": "Índice de cuenta"
-  },
-  "optDetect": {
-    "message": "Detectar"
-  },
-  "accountAuto": {
-    "message": "detectada de tus pestañas de Gemini abiertas"
-  },
-  "probing": {
-    "message": "probando…"
-  },
-  "windowsFound": {
-    "message": "ventanas encontradas"
-  },
-  "noUsagePage": {
-    "message": "no se encontró página de uso"
-  },
-  "autoWord": {
-    "message": "auto"
-  },
-  "probeTail": {
-    "message": "Si tu índice de cuenta es mayor, escríbelo a mano."
   }
 }

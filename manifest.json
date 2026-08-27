@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "3.4.0",
+  "version": "4.0.0",
   "description": "__MSG_extDesc__",
   "permissions": [
     "tabs",
@@ -9,14 +9,12 @@
     "storage",
     "offscreen",
     "alarms",
-    "webRequest",
-    "declarativeNetRequest"
+    "webRequest"
   ],
   "host_permissions": [
     "https://claude.ai/*",
     "https://chatgpt.com/*",
     "https://chat.openai.com/*",
-    "https://gemini.google.com/*",
     "https://ntfy.sh/*"
   ],
   "background": {
@@ -27,23 +25,12 @@
       "matches": [
         "https://claude.ai/*",
         "https://chatgpt.com/*",
-        "https://chat.openai.com/*",
-        "https://gemini.google.com/*"
+        "https://chat.openai.com/*"
       ],
       "js": [
         "content/state-machine.js",
         "content/detector.js",
         "content/content-main.js"
-      ],
-      "run_at": "document_idle"
-    },
-    {
-      "matches": [
-        "https://gemini.google.com/*"
-      ],
-      "js": [
-        "background/usage-adapters.js",
-        "content/gemini-usage.js"
       ],
       "run_at": "document_idle"
     }
@@ -74,14 +61,5 @@
     "http://*/*",
     "https://*/*"
   ],
-  "default_locale": "en",
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "gemini_usage_frame",
-        "enabled": true,
-        "path": "rules.json"
-      }
-    ]
-  }
+  "default_locale": "en"
 }

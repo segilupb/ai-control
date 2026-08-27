@@ -10,7 +10,6 @@
  * Fuentes (verificadas contra los repos de referencia, ver docs/USAGE-SOURCES.md):
  *  · Claude  → GET /api/organizations → /api/organizations/{id}/usage   (oficial)
  *  · ChatGPT → GET /backend-api/wham/usage  (oficial, SOLO Work/Codex)
- *  · Gemini  → GET https://gemini.google.com/usage + parseo HTML        (oficial, frágil)
  *
  * Todos son endpoints privados sin contrato: se valida el shape, se degrada
  * limpio y se conserva el último dato bueno marcándolo `stale`.
@@ -118,129 +117,6 @@
     });
   }
 
-  /* ═══ GEMINI — parseo de https://gemini.google.com/usage ═══════════
-     Estrategia de gemini-usage-bar, reimplementada:
-       1) selectores [data-test-id="gxu-currently"] / "gxu-weekly"
-       2) fallback textual: buscar "N% used" y clasificar por proximidad
-          a la palabra "week/weekly/7 days" en los ancestros.
-     El parser recibe un DOCUMENTO ya construido (o el HTML crudo con un
-     parser inyectado) → testeable sin navegador. */
-  // Multi-idioma: la página se muestra en el idioma de la cuenta de Google.
-  const WEEK_WORDS = [
-    'weekly', 'week', '7-day', '7 days',
-    'semanal', 'semana',                       // es — «Límite semanal»
-    'semanal', 'semanais',                     // pt
-    'hebdomadaire', 'semaine',                 // fr
-    'wöchentlich', 'woche',                    // de
-    'settimanale', 'settimana',                // it
-  ];
-  const RESET_WORDS = [
-    'reset', 'resets',
-    'restablece', 'se restablece',             // es — «Se restablece a la(s) 1:29 a.m.»
-    'redefine', 'reinicia',                    // pt
-    'réinit', 'réinitialise',                  // fr
-    'zurückgesetzt', 'zurücksetzung',          // de
-    'reimposta', 'ripristina',                 // it
-  ];
-
-  function textOf(el) {
-    return (el && el.textContent ? el.textContent : '').trim();
-  }
-
-  // «11% usado», «11 % used», «11% utilizado», «11 % utilisé»…
-  const USED_WORDS = 'used|usado|utilizado|usados|utilisé|utilise|verwendet|genutzt|utilizzato|usada';
-  function pctFrom(text) {
-    const m = text.match(new RegExp(`(\\d{1,3})\\s*%\\s*(?:${USED_WORDS})`, 'i')) ||
-              text.match(/(\d{1,3})\s*%/);
-    return m ? clampPct(m[1]) : null;
-  }
-
-  function looksWeekly(el, doc, maxDepth = 5) {
-    let node = el, depth = 0;
-    while (node && node !== (doc && doc.body) && depth < maxDepth) {
-      const t = (node.textContent || '').toLowerCase();
-      if (WEEK_WORDS.some((w) => t.includes(w))) return true;
-      node = node.parentElement;
-      depth++;
-    }
-    return false;
-  }
-
-  function parseGeminiDocument(doc, opts = {}) {
-    const now = opts.now || Date.now();
-    if (!doc || !doc.querySelector) {
-      return result('gemini', 'usage-page', 'error', { error: 'no-document', fetchedAt: now });
-    }
-
-    // Muro de sesión: título o formulario de login
-    const title = (doc.title || '').toLowerCase();
-    if (/sign in|iniciar sesión|anmelden|connexion/.test(title) || doc.querySelector('input[type="password"]')) {
-      return result('gemini', 'usage-page', 'auth', { fetchedAt: now });
-    }
-
-    let current = null, weekly = null, currentReset = null, weeklyReset = null;
-
-    // 1) Selectores directos
-    const pick = (sel) => doc.querySelector(sel[0]) || doc.querySelector(sel[1]);
-    const curEl = pick(['[data-test-id="gxu-currently"]', '.gxu-currently']);
-    const wkEl = pick(['[data-test-id="gxu-weekly"]', '.gxu-weekly']);
-
-    const scan = (root) => {
-      if (!root) return { pct: null, reset: null };
-      let pct = null, reset = null;
-      const nodes = root.querySelectorAll ? root.querySelectorAll('p, div, span') : [];
-      for (const n of nodes) {
-        const t = textOf(n);
-        if (!t) continue;
-        if (pct === null) pct = pctFrom(t);
-        if (!reset && RESET_WORDS.some((w) => t.toLowerCase().includes(w))) reset = t;
-      }
-      return { pct, reset };
-    };
-
-    const cur = scan(curEl);
-    const wk = scan(wkEl);
-    current = cur.pct; currentReset = cur.reset;
-    weekly = wk.pct; weeklyReset = wk.reset;
-
-    // 2) Fallback textual si algo falta
-    if (current === null || weekly === null) {
-      const all = doc.querySelectorAll ? doc.querySelectorAll('p, div, span, h1, h2, h3, section') : [];
-      for (const el of all) {
-        const t = textOf(el);
-        if (!t || t.length > 200) continue;
-        const pct = pctFrom(t);
-        const isReset = RESET_WORDS.some((w) => t.toLowerCase().includes(w));
-        if (pct === null && !isReset) continue;
-
-        const weeklyCtx = looksWeekly(el, doc);
-        if (pct !== null) {
-          if (weeklyCtx) { if (weekly === null) weekly = pct; }
-          else if (current === null) current = pct;
-        }
-        if (isReset) {
-          if (weeklyCtx) { if (!weeklyReset) weeklyReset = t; }
-          else if (!currentReset) currentReset = t;
-        }
-      }
-    }
-
-    if (current === null && weekly === null) {
-      return result('gemini', 'usage-page', 'unavailable', { error: 'no-values', fetchedAt: now });
-    }
-
-    const windows = [];
-    const c = mkWindow('session', 'current', current === null ? 0 : current, null);
-    const w = mkWindow('weekly', 'weekly', weekly === null ? 0 : weekly, null);
-    if (current !== null && c) { c.resetText = currentReset || null; windows.push(c); }
-    if (weekly !== null && w) { w.resetText = weeklyReset || null; windows.push(w); }
-
-    return result('gemini', 'usage-page', 'ok', {
-      windows, fetchedAt: now,
-      extras: { note: 'parsed-html', partial: current === null || weekly === null },
-    });
-  }
-
   /* ═══ Helpers de estado ════════════════════════════════════════════ */
   const STALE_AFTER_MS = 30 * 60 * 1000;
 
@@ -262,7 +138,7 @@
   }
 
   return {
-    fromClaude, fromChatGPTWham, parseGeminiDocument,
+    fromClaude, fromChatGPTWham,
     mkWindow, markStale, statusFromHttp, clampPct,
     STALE_AFTER_MS,
   };

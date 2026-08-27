@@ -13,9 +13,8 @@ const T = (k, subs) => (window.__ccI18n && window.__ccI18n.t(k, subs)) || null;
 const PROVIDERS = {
   claude:  { name: 'Claude' },
   chatgpt: { name: 'ChatGPT' },
-  gemini:  { name: 'Gemini' },
 };
-const PROVIDER_ORDER = ['claude', 'chatgpt', 'gemini'];
+const PROVIDER_ORDER = ['claude', 'chatgpt'];
 const providerOf = (t) => (PROVIDERS[t && t.provider] ? t.provider : 'claude');
 
 const ACTIVE_STATES = ['GENERATING', 'TOOL_RUNNING', 'SETTLING'];
@@ -179,7 +178,7 @@ function renderUsage(all) {
 
   // Solo las IAs activadas en Opciones: quien use una sola no debe ver dos
   // bloques vacíos de las otras.
-  const enabled = all.enabled || { claude: true, chatgpt: true, gemini: true };
+  const enabled = all.enabled || { claude: true, chatgpt: true };
   const shown = PROVIDER_ORDER.filter((p) => enabled[p] !== false && all[p]);
 
   if (panel) panel.hidden = shown.length === 0;   // sin nada que mostrar, fuera el panel

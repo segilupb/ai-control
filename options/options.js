@@ -17,8 +17,7 @@ const DEFAULTS = {
   usage: { thresholdsEnabled: true, thresholds: { session: 80, weekly: 80 } },
   historyEnabled: true,
   remote: { enabled: false, server: 'https://ntfy.sh', topic: '', includeTitle: false, onDone: true, onAttention: true },
-  providers: { claude: true, chatgpt: true, gemini: true },
-  gemini: { accountIndex: 'auto' },
+  providers: { claude: true, chatgpt: true },
 };
 
 let settings = structuredClone(DEFAULTS);
@@ -68,10 +67,6 @@ function render() {
   $('historyEnabled').checked = settings.historyEnabled;
   $('pClaude').checked = settings.providers.claude !== false;
   $('pChatgpt').checked = settings.providers.chatgpt !== false;
-  $('pGemini').checked = settings.providers.gemini !== false;
-  const gi = settings.gemini.accountIndex;
-  $('geminiAccountIndex').value = (gi === 'auto' || gi === undefined || gi === null) ? '' : String(gi);
-  updateGeminiHint();
   $('remoteEnabled').checked = settings.remote.enabled;
   $('remoteServer').value = settings.remote.server || 'https://ntfy.sh';
   updateServerStatus();
@@ -115,7 +110,6 @@ function bind() {
   // Toggles por proveedor
   $('pClaude').addEventListener('change', (e) => { settings.providers.claude = e.target.checked; save(); });
   $('pChatgpt').addEventListener('change', (e) => { settings.providers.chatgpt = e.target.checked; save(); });
-  $('pGemini').addEventListener('change', (e) => { settings.providers.gemini = e.target.checked; save(); });
 
   // Prueba de sonido por IA (cada una suena distinto)
   document.querySelectorAll('[data-sound]').forEach((btn) => {
@@ -136,33 +130,6 @@ function bind() {
   $('remoteIncludeTitle').addEventListener('change', (e) => { settings.remote.includeTitle = e.target.checked; save(); });
   $('remoteOnDone').addEventListener('change', (e) => { settings.remote.onDone = e.target.checked; save(); });
   $('remoteOnAttention').addEventListener('change', (e) => { settings.remote.onAttention = e.target.checked; save(); });
-  $('geminiAccountIndex').addEventListener('input', (e) => {
-    // Solo dígitos; vacío = auto. Sin tope artificial: hay quien tiene 10+ cuentas.
-    const clean = e.target.value.replace(/\D/g, '').slice(0, 3);
-    if (clean !== e.target.value) e.target.value = clean;
-    settings.gemini.accountIndex = clean === '' ? 'auto' : Number(clean);
-    updateGeminiHint(); save();
-  });
-  $('geminiProbe').addEventListener('click', async () => {
-    const out = $('geminiProbeResult');
-    out.textContent = TT('probing') || 'probing…';
-    out.style.color = 'var(--text-3)';
-    const r = await sendMsg('CC_GEMINI_PROBE');
-    const hit = r && r.results && r.results.find((x) => x.status === 'ok');
-    if (hit) {
-      settings.gemini.accountIndex = String(hit.index);
-      $('geminiAccountIndex').value = String(hit.index);
-      updateGeminiHint(); save();
-      out.textContent = `✓ /u/${hit.index}/ — ${hit.windows} ${TT('windowsFound') || 'windows found'}`;
-      out.style.color = 'var(--state-success)';
-    } else {
-      const detail = r && r.results
-        ? r.results.map((x) => `u/${x.index}:${x.status}`).join('  ')
-        : 'sin respuesta';
-      out.textContent = `✗ ${TT('noUsagePage') || 'no usage page found'} — ${detail}\n${TT('probeTail') || 'If your account index is higher, type it manually.'}`;
-      out.style.color = 'var(--state-warning)';
-    }
-  });
   $('genTopic').addEventListener('click', async () => {
     const r = await sendMsg('CC_REMOTE_GEN_TOPIC');
     if (r && r.topic) { settings.remote.topic = r.topic; $('remoteTopic').value = r.topic; save(); }
@@ -185,7 +152,7 @@ function bind() {
 }
 
 function playTest(kind, provider) {
-  const p = ['claude', 'chatgpt', 'gemini'].includes(provider) ? provider : 'claude';
+  const p = ['claude', 'chatgpt'].includes(provider) ? provider : 'claude';
   const a = new Audio(`../sounds/${p}-${kind}.wav`);
   a.volume = settings.sound.volume;
   a.play().catch(() => {});
@@ -259,17 +226,6 @@ async function authorizeServer() {
   updateServerStatus();
 }
 
-function updateGeminiHint() {
-  const v = settings.gemini.accountIndex;
-  const el = $('geminiAccountHint');
-  if (v === 'auto' || v === undefined || v === null || v === '') {
-    el.textContent = TT('accountAuto') || 'detected from your open Gemini tabs';
-    return;
-  }
-  const n = Number(v);
-  el.textContent = `https://gemini.google.com${n > 0 ? '/u/' + n : ''}/usage`;
-}
-
 function sendMsg(type) {
   return new Promise((resolve) => {
     chrome.runtime.sendMessage({ ns: 'cc', type }, (r) => {
@@ -299,7 +255,7 @@ async function loadHistory() {
     const o = OUTCOME[e.outcome];
     const label = o ? (TT(o[0]) || o[1]) : e.outcome;
     const cls = o ? o[2] : '';
-    const PROV = { claude: 'Claude', chatgpt: 'ChatGPT', gemini: 'Gemini' };
+    const PROV = { claude: 'Claude', chatgpt: 'ChatGPT' };
     const ICON = { completed: '✓', attention: '⚠', abandoned: '·' };
 
     // Proveedor como pill (mismo lenguaje visual que el popup)
