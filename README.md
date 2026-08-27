@@ -4,7 +4,7 @@
 
 **Know the moment your AI finishes — even when you're in another app.**
 
-A local-first browser extension for Edge, Chrome and any Chromium browser that watches your **Claude**, **ChatGPT** and **Gemini** tabs and tells you when a task actually completes, when one needs your attention, and how much of your quota is left.
+A local-first browser extension for Edge, Chrome and any Chromium browser that watches your **Claude** and **ChatGPT** tabs and tells you when a task actually completes, when one needs your attention, and how much of your quota is left.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-c45a1a.svg)](LICENSE)
 ![Manifest V3](https://img.shields.io/badge/Manifest-V3-2b6cb0)
@@ -25,9 +25,9 @@ You give an AI a long job — analyse a repo, refactor a module, research someth
 
 AI Control watches the tabs for you.
 
-- 🔔 **"Claude finished" / "ChatGPT finished" / "Gemini finished"** — fires when the task is *actually* done, not during a pause between tool calls. **Each AI has its own sound**, so you know which one without looking.
+- 🔔 **"Claude finished" / "ChatGPT finished"** — fires when the task is *actually* done, not during a pause between tool calls. **Each AI has its own sound**, so you know which one without looking.
 - ⚠️ **"… needs your attention"** — a different alert (different tone, doesn't auto-dismiss) for permissions, confirmations, errors or an expired session.
-- 📊 **Usage panel** — Claude's 5-hour and weekly windows, ChatGPT's Work/Codex quota, Gemini's current and weekly limits.
+- 📊 **Usage panel** — Claude's 5-hour and weekly windows, ChatGPT's Work/Codex quota.
 - 🔢 **At-a-glance badge** — red = waiting on you, green = finished and unseen, orange = still working.
 - 📱 **Optional phone alerts** — via [ntfy](https://ntfy.sh), including a fully local LAN setup that never touches the internet.
 - 🌍 **Six languages** — English, Spanish, Portuguese (BR), French, German, Italian. Detection is multilingual too, not just the UI.
