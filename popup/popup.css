@@ -1,0 +1,192 @@
+/* AI Control — popup.css
+   Depende de shared/tokens.css (paleta y primitivas).
+   Estructura: cabecera con resumen → lista de tareas → uso de Claude → pie. */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 352px;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.45 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══ Cabecera ══ */
+.hdr { padding: 12px var(--pad) 10px; border-bottom: 1px solid var(--line); }
+.hdr-top { display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand img { border-radius: 5px; opacity: .95; }
+h1 { font-size: 12.5px; font-weight: 650; letter-spacing: .14em; text-transform: uppercase; }
+
+.status {
+  display: flex; align-items: center; gap: 5px;
+  background: none; border: 0; cursor: default;
+  font: 500 10px/1 var(--font); letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-3); padding: 3px 2px;
+}
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--state-success); }
+.status.warn .status-dot { background: var(--state-warning); }
+.status.warn .status-txt { color: var(--state-warning); }
+
+/* Resumen global: la primera lectura del popup */
+.summary { display: flex; gap: 14px; margin-top: 9px; min-height: 15px; }
+.sum-item { display: flex; align-items: baseline; gap: 5px; font-size: 11.5px; color: var(--text-3); }
+.sum-n { font: 650 14px/1 var(--font); color: var(--text-2); font-variant-numeric: tabular-nums; }
+.sum-item.attention .sum-n { color: var(--state-warning); }
+.sum-item.ready .sum-n { color: var(--state-success); }
+.sum-item.active .sum-n { color: var(--text); }
+.summary:empty::after {
+  content: attr(data-idle); font-size: 11.5px; color: var(--text-3);
+}
+
+/* ══ Paneles ══ */
+.panel { padding: 8px var(--pad) 12px; }
+.panel + .panel { border-top: 1px solid var(--line); }
+
+/* ══ Lista de tareas ══ */
+.tasks { list-style: none; }
+.tasks li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0 8px; align-items: center;
+  padding: 7px 9px 7px 12px;
+  margin: 1px -9px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background .12s ease;
+}
+.tasks li:hover { background: var(--hover); }
+
+/* Rail lateral = identidad del proveedor (nunca del estado) */
+.tasks li::before {
+  content: ''; position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 3px; border-radius: 2px; background: var(--rail, var(--state-neutral));
+}
+.tasks li.p-claude  { --rail: var(--provider-claude); }
+.tasks li.p-chatgpt { --rail: var(--provider-chatgpt); }
+.tasks li.p-gemini  { --rail: var(--provider-gemini); }
+.tasks li.is-idle::before, .tasks li.is-unknown::before { opacity: .35; }
+
+.t-meta { grid-column: 1; display: flex; align-items: center; }
+/* Ancho fijo del pill: alinea todos los títulos en la misma columna óptica */
+.t-meta .pill { min-width: 60px; justify-content: center; font-size: 9.5px; padding: 0 6px; height: 16px; }
+.t-title {
+  grid-column: 2; font-size: 12.5px; font-weight: 500; color: var(--text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.t-note {
+  grid-column: 2; grid-row: 2; font-size: 10px;
+  color: var(--state-warning); margin-top: 1px;
+}
+
+/* Estado: a la derecha, siempre icono + texto (nunca solo color) */
+.t-state {
+  grid-column: 3;
+  display: flex; align-items: center; gap: 5px;
+  font-size: 10.5px; color: var(--text-2); white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  max-width: 122px; overflow: hidden;
+}
+.t-state .ico { font-size: 10px; line-height: 1; }
+.t-state.done { color: var(--state-success); }
+.t-state.attn { color: var(--state-warning); font-weight: 600; }
+.t-state.idle, .t-state.unknown { color: var(--state-neutral); }
+
+/* Actividad = movimiento neutro, sin color de marca */
+.t-state.active .ico {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--state-active); display: inline-block;
+  animation: breathe 1.5s ease-in-out infinite;
+}
+@keyframes breathe { 50% { opacity: .25; } }
+
+/* ══ Estado vacío ══ */
+.empty { display: flex; flex-direction: column; gap: 5px; text-align: center; padding: 22px 8px 18px; }
+[hidden] { display: none !important; }
+.empty-title { font-size: 13px; color: var(--text-2); font-weight: 500; }
+.empty-hint { font-size: 11.5px; color: var(--text-3); line-height: 1.5; }
+
+/* ══ Uso de Claude (colapsable, discreto) ══ */
+.usage-head {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  background: none; border: 0; cursor: pointer; padding: 4px 0 8px;
+  color: var(--text-3); font: 700 10px/1 var(--font);
+  letter-spacing: .15em; text-transform: uppercase;
+}
+.usage-head:hover { color: var(--text-2); }
+.usage-title { flex: 0 0 auto; }
+.usage-peek { margin-left: auto; font-size: 11px; letter-spacing: 0; text-transform: none; color: var(--text-3); }
+.chev { font-size: 9px; transition: transform .15s ease; }
+.usage-panel.collapsed .chev { transform: rotate(-90deg); }
+.usage-panel.collapsed #usage-body { display: none; }
+
+.meter { margin-bottom: 9px; }
+.meter-head { display: flex; justify-content: space-between; align-items: baseline; }
+.meter-label { font-size: 12px; color: var(--text-2); }
+.meter-pct { font-size: 12px; color: var(--text); font-variant-numeric: tabular-nums; }
+.ticks { display: flex; gap: 2px; margin: 5px 0 3px; }
+.ticks i { flex: 1; height: 6px; border-radius: 1px; background: var(--line); }
+.ticks i.on { background: var(--provider-claude); }
+.ticks.warn i.on { background: #e8a33d; }
+.ticks.danger i.on { background: var(--state-warning); }
+.meter-foot { color: var(--text-3); font-size: 10.5px; min-height: 13px; }
+
+.usage-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
+.usage-foot .mono { font-size: 10px; color: var(--text-3); }
+.usage-note {
+  font-size: 10px; color: var(--text-3); line-height: 1.5;
+  margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line-soft);
+}
+
+.ghost { background: none; border: 0; color: var(--text-3); cursor: pointer; font-size: 13px; padding: 2px 4px; line-height: 1; }
+.ghost:hover { color: var(--text); }
+.ghost.spin { animation: rot 1s linear infinite; display: inline-block; }
+@keyframes rot { to { transform: rotate(360deg); } }
+
+.err {
+  color: var(--state-warning); font-size: 11.5px; line-height: 1.45;
+  border: 1px solid color-mix(in srgb, var(--state-warning) 30%, transparent);
+  border-radius: var(--r-md); padding: 8px 10px; margin-top: 4px;
+}
+
+/* ══ Pie ══ */
+.foot {
+  display: flex; gap: 16px; align-items: center;
+  padding: 9px var(--pad); border-top: 1px solid var(--line);
+  background: var(--surface);
+}
+.toggle { display: flex; gap: 6px; align-items: center; color: var(--text-3); cursor: pointer; font-size: 12px; }
+.toggle input { accent-color: var(--text-2); width: 13px; height: 13px; }
+.toggle:hover { color: var(--text-2); }
+.settings { margin-left: auto; font-size: 14px; }
+
+/* ══ Panel de uso multi-proveedor ══ */
+.uprov { padding: 9px 0; }
+.uprov + .uprov { border-top: 1px solid var(--line-soft); }
+
+.uhead { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+.uscope {
+  font-size: 9.5px; color: var(--text-3); letter-spacing: .04em;
+  border: 1px solid var(--line); border-radius: 999px; padding: 1px 6px;
+}
+.ustatus { margin-left: auto; font-size: 9.5px; letter-spacing: .04em; text-transform: uppercase; }
+.ustatus.stale { color: #d9a441; }
+.ustatus.auth { color: var(--state-warning); }
+.ustatus.unavailable, .ustatus.error { color: var(--text-3); }
+
+.ublock + .ublock { margin-top: 6px; }
+.urow { display: grid; grid-template-columns: 58px 1fr 34px; gap: 8px; align-items: center; }
+.ulabel { font-size: 11.5px; color: var(--text-2); }
+.upct { font-size: 11px; color: var(--text); text-align: right; font-variant-numeric: tabular-nums; }
+
+.ubar { height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; display: block; }
+.ufill { display: block; height: 100%; border-radius: 3px; }
+.ufill.claude { background: var(--provider-claude); }
+.ufill.chatgpt { background: var(--provider-chatgpt); }
+.ufill.gemini { background: var(--provider-gemini); }
+
+.ureset { font-size: 10px; color: var(--text-3); margin-top: 3px; padding-left: 66px; }
+.unote { font-size: 10.5px; color: var(--text-3); line-height: 1.5; }
+

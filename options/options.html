@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI Control — Options</title>
+<link rel="stylesheet" href="../shared/tokens.css">
+<link rel="stylesheet" href="options.css">
+</head>
+<body>
+<main>
+  <header class="hdr">
+    <img src="../icons/icon48.png" alt="" width="28" height="28">
+    <div>
+      <h1>AI&nbsp;Control</h1>
+      <p class="sub" data-i18n="optSubtitle">Options · everything saves instantly and stays in your browser</p>
+    </div>
+    <span id="saved" class="saved" hidden data-i18n="optSaved">Saved ✓</span>
+  </header>
+  <div class="hdr-providers">
+    <span class="pill claude">Claude</span>
+    <span class="pill chatgpt">ChatGPT</span>
+    <span class="pill gemini">Gemini</span>
+  </div>
+
+  <!-- ── Notificaciones ── -->
+  <section class="card">
+    <h2 data-i18n="optNotifications">Notifications</h2>
+    <label class="row">
+      <input type="checkbox" id="notifyDone">
+      <span><b data-i18n="optNotifyDone">Task finished</b><small data-i18n="optNotifyDoneHint">Fires when a conversation truly finishes — never during pauses between tool calls.</small></span>
+    </label>
+    <label class="row">
+      <input type="checkbox" id="notifyAttention">
+      <span><b data-i18n="optNotifyAttention">Needs attention</b><small data-i18n="optNotifyAttentionHint">A distinct alert for permissions, confirmations, errors or an expired session. Doesn't auto-dismiss.</small></span>
+    </label>
+    <label class="row slider-row">
+      <span><b>Auto-ocultar «terminó»</b><small id="autoDismissLabel"></small></span>
+      <input type="range" id="autoDismissSeconds" min="0" max="120" step="5">
+    </label>
+  </section>
+
+  <!-- ── Servicios de IA ── -->
+  <section class="card">
+    <h2 data-i18n="optProviders">AI services</h2>
+    <p class="hint-block" style="border:0;padding-top:0;margin-top:-4px" data-i18n="optProvidersHint">Turn off the ones you don't use: their tabs stop being monitored and their usage block disappears from the popup. Each AI has its own alert sound.</p>
+    <label class="row">
+      <input type="checkbox" id="pClaude">
+      <span class="prov"><span class="pill claude">Claude</span><small class="mono">claude.ai</small></span>
+      <button class="btn sm" data-sound="claude" data-i18n="testSound">Test sound</button>
+    </label>
+    <label class="row">
+      <input type="checkbox" id="pChatgpt">
+      <span class="prov"><span class="pill chatgpt">ChatGPT</span><small class="mono">chatgpt.com · chat.openai.com</small></span>
+      <button class="btn sm" data-sound="chatgpt" data-i18n="testSound">Test sound</button>
+    </label>
+    <label class="row">
+      <input type="checkbox" id="pGemini">
+      <span class="prov"><span class="pill gemini">Gemini</span><small class="mono">gemini.google.com</small></span>
+      <button class="btn sm" data-sound="gemini" data-i18n="testSound">Test sound</button>
+    </label>
+  </section>
+
+  <!-- ── Cuenta de Gemini ── -->
+  <section class="card">
+    <h2 data-i18n="optGeminiAccount">Gemini account</h2>
+    <p class="hint-block" style="border:0;padding-top:0;margin-top:-4px" data-i18n="optGeminiAccountHint">Google separates accounts by URL index: /u/0/ is the default, /u/1/ the second, and so on. Pick the one you use for Gemini. Type the number, or leave it empty for auto.</p>
+    <label class="row slider-row">
+      <span><b data-i18n="optAccountIndex">Account index</b><small class="hint mono" id="geminiAccountHint"></small></span>
+      <span style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="geminiAccountIndex" class="txt mono" style="width:110px"
+               inputmode="numeric" spellcheck="false" placeholder="auto"
+               data-i18n-placeholder="autoWord">
+        <button class="btn" id="geminiProbe" data-i18n="optDetect">Detect</button>
+      </span>
+    </label>
+    <div class="row" style="cursor:default;padding-top:0">
+      <span></span><small id="geminiProbeResult" class="mono" style="font-size:11px;color:var(--text-3)"></small>
+    </div>
+  </section>
+
+  <!-- ── Sonido ── -->
+  <section class="card">
+    <h2 data-i18n="optSound">Sound</h2>
+    <label class="row">
+      <input type="checkbox" id="soundEnabled">
+      <span><b data-i18n="optSoundOwn">Built-in alert sound</b><small data-i18n="optSoundOwnHint">Each AI has its own tone. Turn this off to use the system's default notification sound.</small></span>
+    </label>
+    <label class="row slider-row">
+      <span><b data-i18n="optVolume">Volume</b><small id="volumeLabel"></small></span>
+      <input type="range" id="soundVolume" min="0" max="100" step="5">
+    </label>
+    <div class="row btns">
+      <button class="btn" id="testAttention"><span data-i18n="optTestAttention">▶ Test "attention"</span></button>
+    </div>
+  </section>
+
+  <!-- ── Detección ── -->
+  <section class="card">
+    <h2 data-i18n="optDetection">Detection</h2>
+    <label class="row slider-row">
+      <span><b data-i18n="optSettle">Stability window</b>
+        <small id="settleLabel"></small>
+        <small class="hint" data-i18n="optSettleHint">Time without activity before a task counts as finished. Raise it if you ever get an early alert; lower it for faster ones.</small>
+      </span>
+      <input type="range" id="settleMs" min="2000" max="10000" step="500">
+    </label>
+    <label class="row slider-row">
+      <span><b data-i18n="optMinTask">Minimum task duration</b>
+        <small id="minTaskLabel"></small>
+        <small class="hint" data-i18n="optMinTaskHint">Minimum activity for a task to count (filters out DOM flicker on page load).</small>
+      </span>
+      <input type="range" id="minTaskMs" min="500" max="5000" step="250">
+    </label>
+  </section>
+
+  <!-- ── Uso ── -->
+  <section class="card">
+    <h2 data-i18n="optUsage">Usage monitor</h2>
+    <label class="row">
+      <input type="checkbox" id="thresholdsEnabled">
+      <span><b data-i18n="optThresholds">Notify when crossing a threshold</b><small data-i18n="optThresholdsHint">Once per crossing; re-arms when the window resets.</small></span>
+    </label>
+    <label class="row slider-row">
+      <span><b data-i18n="optThSession">5-hour window threshold</b><small id="thSessionLabel"></small></span>
+      <input type="range" id="thSession" min="50" max="95" step="5">
+    </label>
+    <label class="row slider-row">
+      <span><b data-i18n="optThWeekly">Weekly threshold</b><small id="thWeeklyLabel"></small></span>
+      <input type="range" id="thWeekly" min="50" max="95" step="5">
+    </label>
+  </section>
+
+  <!-- ── Teléfono ── -->
+  <section class="card">
+    <h2 data-i18n="optPhone">Phone alerts (ntfy)</h2>
+    <label class="row">
+      <input type="checkbox" id="remoteEnabled">
+      <span><b data-i18n="optRemoteEnable">Send alerts to my phone</b>
+        <small data-i18n="optRemoteHint">Via the ntfy app (free, no account). Opt-in exception to local-first: the alert travels through an ntfy server. Generic text by default — never conversation content.</small></span>
+    </label>
+    <label class="row slider-row">
+      <span><b data-i18n="optServer">Server</b><small class="hint" data-i18n="optServerHint">ntfy.sh (internet) or your own LAN server, e.g. http://192.168.1.50:8080</small></span>
+      <span style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="remoteServer" class="txt mono" spellcheck="false" placeholder="https://ntfy.sh">
+        <button class="btn" id="authServer" data-i18n="optAuthorize">Authorize</button>
+      </span>
+    </label>
+    <div class="row" style="cursor:default;padding-top:0">
+      <span></span><small id="serverStatus" class="mono" style="font-size:11px;color:var(--dim)"></small>
+    </div>
+    <label class="row slider-row">
+      <span><b data-i18n="optTopic">Secret topic</b><small class="hint" data-i18n="optTopicHint">This is your address: anyone who knows it can read the alerts. Use the generated one.</small></span>
+      <span style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="remoteTopic" class="txt mono" spellcheck="false" placeholder="pulsa Generar">
+        <button class="btn" id="genTopic" data-i18n="optGenerate">Generate</button>
+      </span>
+    </label>
+    <label class="row">
+      <input type="checkbox" id="remoteIncludeTitle">
+      <span><b data-i18n="optIncludeTitle">Include conversation title</b><small data-i18n="optIncludeTitleHint">When off, only a generic "A task has finished" is sent.</small></span>
+    </label>
+    <label class="row">
+      <input type="checkbox" id="remoteOnDone">
+      <span><b data-i18n="optRemoteDone">Alert when finished</b></span>
+    </label>
+    <label class="row">
+      <input type="checkbox" id="remoteOnAttention">
+      <span><b data-i18n="optRemoteAttention">Alert when attention needed</b></span>
+    </label>
+    <div class="row btns">
+      <button class="btn" id="remoteTest"><span data-i18n="optSendTest">📱 Send test to phone</span></button>
+      <span id="remoteTestResult" class="mono" style="font-size:12px;color:var(--dim)"></span>
+    </div>
+    <p class="hint-block" data-i18n="optPhoneSetup">On your phone: install the ntfy app → Subscribe to a topic → paste the topic above. Using your own server? Add it in the app settings first. Full LAN guide in docs/PHONE-LAN.md</p>
+  </section>
+
+  <!-- ── Historial ── -->
+  <section class="card">
+    <h2 data-i18n="optHistory">History</h2>
+    <label class="row">
+      <input type="checkbox" id="historyEnabled">
+      <span><b data-i18n="optHistoryOn">Save task history</b><small data-i18n="optHistoryHint">Title, timings and outcome only — never conversation content. 200 entries max, stored locally.</small></span>
+    </label>
+    <div class="row btns">
+      <button class="btn" id="exportHistory" data-i18n="optExport">Export JSON</button>
+      <button class="btn danger" id="clearHistory" data-i18n="optClear">Clear history</button>
+    </div>
+    <table class="hist" id="histTable">
+      <thead><tr><th data-i18n="colProvider">AI</th><th data-i18n="colConversation">Conversation</th><th data-i18n="colResult">Result</th><th data-i18n="colDuration">Duration</th><th data-i18n="colWhen">When</th></tr></thead>
+      <tbody id="histBody"></tbody>
+    </table>
+    <p class="empty" id="histEmpty" hidden data-i18n="histEmpty">No entries yet.</p>
+  </section>
+
+  <footer class="foot">
+    <span data-i18n="footPrivacy">AI Control is local-first: nothing leaves your browser except the two Claude usage requests made with your own session.</span>
+    <span class="mono" id="ver"></span>
+  </footer>
+</main>
+<script src="../shared/i18n.js"></script>
+<script src="options.js"></script>
+</body>
+</html>

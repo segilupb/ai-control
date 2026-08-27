@@ -1,0 +1,19 @@
+{
+  "name": "ai-control",
+  "version": "3.4.0",
+  "description": "Local-first browser extension that notifies you when Claude, ChatGPT or Gemini finishes a task or needs your attention.",
+  "private": true,
+  "scripts": {
+    "test": "node tests/test-fsm.js && node tests/test-hybrid.js && node tests/test-registry.js && node tests/test-notifier.js && node tests/test-usage.js && node tests/test-usage-adapters.js && node tests/test-history.js && node tests/test-remote.js && node tests/test-providers.js && node tests/test-i18n.js"
+  },
+  "license": "MIT",
+  "keywords": [
+    "claude",
+    "chrome-extension",
+    "edge-extension",
+    "manifest-v3",
+    "notifications",
+    "ntfy"
+  ],
+  "ccChannel": "public"
+}

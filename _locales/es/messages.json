@@ -1,0 +1,456 @@
+{
+  "extName": {
+    "message": "AI Control"
+  },
+  "extDesc": {
+    "message": "Monitor local para Claude, ChatGPT y Gemini: te avisa cuando alguno termina una tarea o necesita tu atención, con un sonido distinto por IA."
+  },
+  "notifDone": {
+    "message": "Claude terminó"
+  },
+  "notifDoneGroup": {
+    "message": "Claude terminó $COUNT$ tareas",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "notifAttention": {
+    "message": "Claude necesita tu atención"
+  },
+  "reasonDialog": {
+    "message": "Hay un permiso o confirmación pendiente"
+  },
+  "reasonError": {
+    "message": "La conversación muestra un error"
+  },
+  "reasonAuth": {
+    "message": "La sesión necesita que inicies sesión"
+  },
+  "durationLabel": {
+    "message": "Duración"
+  },
+  "fallbackTab": {
+    "message": "Conversación (pestaña $ID$)",
+    "placeholders": {
+      "id": {
+        "content": "$1"
+      }
+    }
+  },
+  "usageNotifTitle": {
+    "message": "Uso de Claude"
+  },
+  "usageNotifBody": {
+    "message": "Has alcanzado el $PCT$% de tu $WINDOW$.",
+    "placeholders": {
+      "pct": {
+        "content": "$1"
+      },
+      "window": {
+        "content": "$2"
+      }
+    }
+  },
+  "windowSession": {
+    "message": "ventana de 5 horas"
+  },
+  "windowWeekly": {
+    "message": "límite semanal"
+  },
+  "resetLabel": {
+    "message": "Reset"
+  },
+  "popupUsage": {
+    "message": "Uso"
+  },
+  "popupTasks": {
+    "message": "Tareas"
+  },
+  "meter5h": {
+    "message": "5 horas"
+  },
+  "meterWeek": {
+    "message": "Semana"
+  },
+  "refreshNow": {
+    "message": "Actualizar ahora"
+  },
+  "monitorStatus": {
+    "message": "Estado del monitor"
+  },
+  "monitorOk": {
+    "message": "Monitor funcionando"
+  },
+  "monitorWarn": {
+    "message": "Alguna pestaña no responde o el detector no reconoce la página"
+  },
+  "noTabs": {
+    "message": "Sin pestañas de IA abiertas"
+  },
+  "noTabsHint": {
+    "message": "Abre Claude, ChatGPT o Gemini y este panel las detecta solo."
+  },
+  "toggleNotifications": {
+    "message": "Notificaciones"
+  },
+  "toggleSound": {
+    "message": "Sonido"
+  },
+  "updatedAgo": {
+    "message": "actualizado hace $TIME$",
+    "placeholders": {
+      "time": {
+        "content": "$1"
+      }
+    }
+  },
+  "resetIn": {
+    "message": "reset en $TIME$",
+    "placeholders": {
+      "time": {
+        "content": "$1"
+      }
+    }
+  },
+  "resetting": {
+    "message": "reseteando…"
+  },
+  "notAvailable": {
+    "message": "n/d"
+  },
+  "stateGenerating": {
+    "message": "Generando"
+  },
+  "stateTool": {
+    "message": "Herramienta"
+  },
+  "stateSettling": {
+    "message": "Finalizando…"
+  },
+  "stateCompleted": {
+    "message": "Terminó"
+  },
+  "stateAttention": {
+    "message": "Necesita atención"
+  },
+  "stateUnknown": {
+    "message": "Sin señal"
+  },
+  "stateIdle": {
+    "message": "Inactiva"
+  },
+  "finishedAgo": {
+    "message": "Terminó hace $TIME$",
+    "placeholders": {
+      "time": {
+        "content": "$1"
+      }
+    }
+  },
+  "unresponsive": {
+    "message": "sin respuesta — click para abrir"
+  },
+  "countActive": {
+    "message": "$N$ activas",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "countReady": {
+    "message": "$N$ listas",
+    "placeholders": {
+      "n": {
+        "content": "$1"
+      }
+    }
+  },
+  "remoteDoneBody": {
+    "message": "Una tarea ha terminado"
+  },
+  "remoteAttentionBody": {
+    "message": "Se requiere tu intervención"
+  },
+  "remoteTestBody": {
+    "message": "Prueba correcta: los avisos llegarán aquí"
+  },
+  "optNotifications": {
+    "message": "Notificaciones"
+  },
+  "optSound": {
+    "message": "Sonido"
+  },
+  "optDetection": {
+    "message": "Detección"
+  },
+  "optUsage": {
+    "message": "Monitor de uso"
+  },
+  "optPhone": {
+    "message": "Aviso en el teléfono (ntfy)"
+  },
+  "optHistory": {
+    "message": "Historial"
+  },
+  "optSaved": {
+    "message": "Guardado ✓"
+  },
+  "optSubtitle": {
+    "message": "Monitorizando Claude, ChatGPT y Gemini · todo se guarda al instante y queda en tu navegador"
+  },
+  "optNotifyDone": {
+    "message": "Tarea terminada"
+  },
+  "optNotifyAttention": {
+    "message": "Necesita atención"
+  },
+  "optSoundOwn": {
+    "message": "Aviso sonoro propio"
+  },
+  "optVolume": {
+    "message": "Volumen"
+  },
+  "optSettle": {
+    "message": "Ventana de estabilidad"
+  },
+  "optMinTask": {
+    "message": "Duración mínima de tarea"
+  },
+  "optThresholds": {
+    "message": "Avisar al cruzar un umbral"
+  },
+  "optThSession": {
+    "message": "Umbral ventana 5 h"
+  },
+  "optThWeekly": {
+    "message": "Umbral semanal"
+  },
+  "optRemoteEnable": {
+    "message": "Enviar avisos a mi teléfono"
+  },
+  "optServer": {
+    "message": "Servidor"
+  },
+  "optTopic": {
+    "message": "Topic secreto"
+  },
+  "optIncludeTitle": {
+    "message": "Incluir el título de la conversación"
+  },
+  "optRemoteDone": {
+    "message": "Avisar al terminar"
+  },
+  "optRemoteAttention": {
+    "message": "Avisar si necesita atención"
+  },
+  "optHistoryOn": {
+    "message": "Guardar historial de tareas"
+  },
+  "optAuthorize": {
+    "message": "Autorizar"
+  },
+  "optGenerate": {
+    "message": "Generar"
+  },
+  "optExport": {
+    "message": "Exportar JSON"
+  },
+  "optClear": {
+    "message": "Vaciar historial"
+  },
+  "colConversation": {
+    "message": "Conversación"
+  },
+  "colResult": {
+    "message": "Resultado"
+  },
+  "colDuration": {
+    "message": "Duración"
+  },
+  "colWhen": {
+    "message": "Cuándo"
+  },
+  "histEmpty": {
+    "message": "Sin entradas todavía."
+  },
+  "optSendTest": {
+    "message": "📱 Enviar prueba al teléfono"
+  },
+  "optTestDone": {
+    "message": "▶ Probar «terminó»"
+  },
+  "optTestAttention": {
+    "message": "▶ Probar «atención»"
+  },
+  "outcomeCompleted": {
+    "message": "Terminó"
+  },
+  "outcomeAttention": {
+    "message": "Atención"
+  },
+  "outcomeAbandoned": {
+    "message": "Abandonada"
+  },
+  "untitled": {
+    "message": "(sin título)"
+  },
+  "finishedWord": {
+    "message": "terminó"
+  },
+  "needsAttentionWord": {
+    "message": "necesita tu atención"
+  },
+  "usageOnlyClaude": {
+    "message": "Solo Claude publica datos de uso — ChatGPT y Gemini no exponen sus límites."
+  },
+  "optProviders": {
+    "message": "Servicios de IA"
+  },
+  "optProvidersHint": {
+    "message": "Desactiva las que no uses: sus pestañas dejan de monitorizarse y su bloque de uso desaparece del popup. Cada IA tiene su propio sonido."
+  },
+  "testSound": {
+    "message": "Probar sonido"
+  },
+  "colProvider": {
+    "message": "IA"
+  },
+  "claudeUsage": {
+    "message": "Uso de Claude"
+  },
+  "usageErrorTail": {
+    "message": "El monitor de tareas sigue funcionando."
+  },
+  "sumActive": {
+    "message": "activas"
+  },
+  "sumReady": {
+    "message": "listas"
+  },
+  "sumAttention": {
+    "message": "atención"
+  },
+  "sumAllQuiet": {
+    "message": "Todo tranquilo"
+  },
+  "sumNoTabs": {
+    "message": "Nada monitorizado"
+  },
+  "statusOk": {
+    "message": "OK"
+  },
+  "statusCheck": {
+    "message": "Revisar"
+  },
+  "openOptions": {
+    "message": "Opciones"
+  },
+  "optNotifyDoneHint": {
+    "message": "Salta cuando una conversación termina de verdad — nunca en las pausas entre herramientas."
+  },
+  "stateAttentionShort": {
+    "message": "Atención"
+  },
+  "stateToolShort": {
+    "message": "Herramienta"
+  },
+  "stateCompletedShort": {
+    "message": "Listo"
+  },
+  "optNotifyAttentionHint": {
+    "message": "Aviso distinto para permisos, confirmaciones, errores o sesión caducada. No se auto-oculta."
+  },
+  "optSoundOwnHint": {
+    "message": "Cada IA tiene su propio tono. Apágalo para usar el sonido estándar del sistema."
+  },
+  "optSettleHint": {
+    "message": "Tiempo sin actividad antes de dar una tarea por terminada. Súbelo si algún aviso llega antes de tiempo; bájalo para avisos más rápidos."
+  },
+  "optMinTaskHint": {
+    "message": "Actividad mínima para que una tarea cuente (filtra parpadeos al cargar la página)."
+  },
+  "optThresholdsHint": {
+    "message": "Una sola vez por cruce; se re-arma cuando la ventana se resetea."
+  },
+  "optHistoryHint": {
+    "message": "Solo título, tiempos y resultado — nunca el contenido de las conversaciones. Máx. 200 entradas, local."
+  },
+  "optRemoteHint": {
+    "message": "Vía la app ntfy (gratis, sin cuenta). Excepción opt-in al local-first: el aviso viaja por un servidor ntfy. Texto genérico por defecto — nunca el contenido de conversaciones."
+  },
+  "optServerHint": {
+    "message": "ntfy.sh (internet) o tu propio servidor en la LAN, p. ej. http://192.168.1.50:8080"
+  },
+  "optTopicHint": {
+    "message": "Es tu dirección: quien lo conozca puede leer los avisos. Usa el generado."
+  },
+  "optIncludeTitleHint": {
+    "message": "Apagado: solo se envía «Una tarea ha terminado»."
+  },
+  "optPhoneSetup": {
+    "message": "En el teléfono: instala la app ntfy → Suscribirse a un tema → pega el topic de arriba. ¿Servidor propio? Añádelo antes en los ajustes de la app. Guía LAN completa en docs/PHONE-LAN.md"
+  },
+  "footPrivacy": {
+    "message": "AI Control es local-first: nada sale de tu navegador salvo las dos consultas de uso de Claude con tu propia sesión."
+  },
+  "usageStale": {
+    "message": "desfasado"
+  },
+  "usageAuth": {
+    "message": "inicia sesión"
+  },
+  "usageUnavailable": {
+    "message": "no publicado"
+  },
+  "usageError": {
+    "message": "no disponible"
+  },
+  "usageAuthHint": {
+    "message": "Abre el sitio e inicia sesión para leer el uso."
+  },
+  "usageNoneHint": {
+    "message": "Este proveedor no publica datos de uso."
+  },
+  "scopeWorkCodex": {
+    "message": "Work/Codex"
+  },
+  "credits": {
+    "message": "Créditos"
+  },
+  "meterCurrent": {
+    "message": "Actual"
+  },
+  "optGeminiAccount": {
+    "message": "Cuenta de Gemini"
+  },
+  "optGeminiAccountHint": {
+    "message": "Google separa las cuentas por índice en la URL: /u/0/ es la predeterminada, /u/1/ la segunda, etc. Escribe el número que usas para Gemini, o déjalo vacío para auto."
+  },
+  "optAccountIndex": {
+    "message": "Índice de cuenta"
+  },
+  "optDetect": {
+    "message": "Detectar"
+  },
+  "accountAuto": {
+    "message": "detectada de tus pestañas de Gemini abiertas"
+  },
+  "probing": {
+    "message": "probando…"
+  },
+  "windowsFound": {
+    "message": "ventanas encontradas"
+  },
+  "noUsagePage": {
+    "message": "no se encontró página de uso"
+  },
+  "autoWord": {
+    "message": "auto"
+  },
+  "probeTail": {
+    "message": "Si tu índice de cuenta es mayor, escríbelo a mano."
+  }
+}

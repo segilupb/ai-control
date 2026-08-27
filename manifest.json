@@ -1,0 +1,87 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "version": "3.4.0",
+  "description": "__MSG_extDesc__",
+  "permissions": [
+    "tabs",
+    "notifications",
+    "storage",
+    "offscreen",
+    "alarms",
+    "webRequest",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://claude.ai/*",
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://gemini.google.com/*",
+    "https://ntfy.sh/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://claude.ai/*",
+        "https://chatgpt.com/*",
+        "https://chat.openai.com/*",
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "content/state-machine.js",
+        "content/detector.js",
+        "content/content-main.js"
+      ],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "background/usage-adapters.js",
+        "content/gemini-usage.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Claude Control",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_popup": "popup/popup.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "optional_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "default_locale": "en",
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "gemini_usage_frame",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  }
+}
